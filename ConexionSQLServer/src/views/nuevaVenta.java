@@ -1102,6 +1102,7 @@ public class nuevaVenta extends javax.swing.JInternalFrame {
                     {
                         storedProcedures.nuevaVenta(codEmpleado, codCliente, codProducto, Folio, Fecha, precio, cantidad);
                         storedProcedures.restPxV(codProducto, cantRestante);
+                        storedProcedures.addPromo_venta(codProducto, Folio);
                     }
                     catch( SQLException e ){
                         JOptionPane.showMessageDialog(null, "No se realizó, :(" , "Error" , JOptionPane.ERROR_MESSAGE);
@@ -1110,23 +1111,7 @@ public class nuevaVenta extends javax.swing.JInternalFrame {
 
                 JOptionPane.showMessageDialog(null, "Venta de crédito creada correctamente!!" , "Genial" , JOptionPane.INFORMATION_MESSAGE);
 
-                folio.setText("");
-                comboEmpleado.setSelectedIndex(0);
-                comboCliente.setSelectedIndex(0);
-                inputCantidad.setText("");
-                inputCantidad.setEnabled(false);
-                DefaultTableModel tv = (DefaultTableModel) tableVenta.getModel();
-                int nfilas = tableVenta.getRowCount();
-                for( int i = nfilas-1 ; i >= 0  ; i -- ){
-                    tv.removeRow(i);
-                }
-                subtotal.setText("");
-                iva.setText("");
-                total.setText("");
-                btnPagarContado.setEnabled(false);
-                btnPagoCredito.setEnabled(false);
-                txtBuscarProd.setText("");
-                cleanProd();
+                
                 
                 //abrir edo. de cta
                 estadoCuenta ec = new estadoCuenta();
@@ -1141,7 +1126,6 @@ public class nuevaVenta extends javax.swing.JInternalFrame {
 
                 String fec[] = fecha.getText().split("");
                 String mes = fec[5]+fec[6];
-                JOptionPane.showMessageDialog(null, mes);
                 Calendar año = Calendar.getInstance();
 
                 int anio = año.get(Calendar.YEAR);
@@ -1203,6 +1187,25 @@ public class nuevaVenta extends javax.swing.JInternalFrame {
                         break;
                 }
                 ec.limitePago.setText(date);
+                
+                //setear venta
+                folio.setText("");
+                comboEmpleado.setSelectedIndex(0);
+                comboCliente.setSelectedIndex(0);
+                inputCantidad.setText("");
+                inputCantidad.setEnabled(false);
+                DefaultTableModel tv = (DefaultTableModel) tableVenta.getModel();
+                int nfilas = tableVenta.getRowCount();
+                for( int i = nfilas-1 ; i >= 0  ; i -- ){
+                    tv.removeRow(i);
+                }
+                subtotal.setText("");
+                iva.setText("");
+                total.setText("");
+                btnPagarContado.setEnabled(false);
+                btnPagoCredito.setEnabled(false);
+                txtBuscarProd.setText("");
+                cleanProd();
             }
         }
     }//GEN-LAST:event_btnPagoCreditoActionPerformed

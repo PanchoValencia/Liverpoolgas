@@ -686,4 +686,15 @@ public class storedProcedures {
         update.setInt(2, cant);
         update.execute();
     }
+    
+    //ESTADO DE CUENTA
+    public static void newEC( int codCte , String folio , String fechaLim , float total)throws SQLException{
+        CallableStatement add = ConnectionDB.GetConnection().prepareCall("{call newEC(?,?,?,?)}");
+        
+        add.setInt(1, codCte);
+        add.setString(2, folio);
+        add.setString(3, fechaLim);
+        add.setFloat(4, total);
+        add.execute();
+    }
 }

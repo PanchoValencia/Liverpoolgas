@@ -1060,8 +1060,17 @@ update producto set cantidad_producto=@cant where cod_producto=@cod
 end
 go
 
+/*:::::ESTADO DE CUENTA:::::*/
+/*Nuevo estado de cuenta al hacer venta de crédito*/
+go
+create proc newEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @total float(53) )
+as begin
+INSERT INTO estado_cuenta( cod_cliente , folio_venta , fecha_limite_ec , total_ec ) values( @cod , @folio , @fechaLim , @total )
+end
+go
 
 
+/*---------------------------------------------------------------------*/
 /*Some querys*/
 select * from cliente where nombres_cliente like '%dun%' and activo=0
 select * from domicilio

@@ -6,6 +6,8 @@
 package views;
 
 import conexionsqlserver.Validations;
+import conexionsqlserver.storedProcedures;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -195,13 +197,42 @@ public class estadoCuenta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRealizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRealizarActionPerformed
+        
+        String cod[]  = cliente.getText().split("");
+        int codCte    = Integer.parseInt(cod[0]);
+        String fol    = folio.getText();
+        String fechaL = limitePago.getText();
+        float tot     = Float.parseFloat(total.getText());
+        
+        try
+        {
+            storedProcedures.newEC(codCte, fol, fechaL, tot);
+            JOptionPane.showMessageDialog(null, "Estado de cuenta creado correctamente", "Genial", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null, "Error al crear estado de cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.dispose();
-        //---------falta generar el estado de cuenta
     }//GEN-LAST:event_btnRealizarActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        String cod[]  = cliente.getText().split("");
+        int codCte    = Integer.parseInt(cod[0]);
+        String fol    = folio.getText();
+        String fechaL = limitePago.getText();
+        float tot     = Float.parseFloat(total.getText());
+        
+        try
+        {
+            storedProcedures.newEC(codCte, fol, fechaL, tot);
+            JOptionPane.showMessageDialog(null, "Estado de cuenta creado correctamente", "Genial", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null, "Error al crear estado de cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.dispose();
-        //-------- mismo codigo del boton realizar
     }//GEN-LAST:event_formWindowClosed
 
     /**

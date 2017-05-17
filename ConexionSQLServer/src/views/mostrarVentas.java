@@ -1,0 +1,744 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package views;
+
+import conexionsqlserver.ConnectionDB;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author JoséFrancisco
+ */
+public class mostrarVentas extends javax.swing.JInternalFrame {
+    static ResultSet res;
+    /**
+     * Creates new form adminVentas
+     */
+    
+    public void configurarImporte(){
+        for( int i = 0 ; i < tablaReporte.getRowCount() ; i ++ )
+        {
+            float precio     = Float.parseFloat(tablaReporte.getValueAt(i, 3).toString());
+            int cantidad     = Integer.parseInt(tablaReporte.getValueAt(i, 5).toString());
+            float subt = 0 , importe = 0;
+            
+            if( tablaReporte.getValueAt(i, 4) == null ){
+                importe = precio * cantidad ;
+                tablaReporte.setValueAt(importe, i, 6);
+            }
+            else
+            {
+                String promocion = tablaReporte.getValueAt(i, 4).toString();
+
+                switch( promocion )
+                {
+                    case "10% de descuento":
+                        subt = ( ( precio * cantidad ) / 100 ) * (10);
+                        importe = ( precio * cantidad ) - (subt);
+                        tablaReporte.setValueAt(importe, i, 6);
+                        break;
+
+                    case "20% de descuento":
+                        subt = ( ( precio * cantidad ) / 100 ) * (20);
+                        importe = ( precio * cantidad ) - (subt);
+                        tablaReporte.setValueAt(importe, i, 6);
+                        break;
+
+                    case "30% de descuento":
+                        subt = ( ( precio * cantidad ) / 100 ) * (30);
+                        importe = ( precio * cantidad ) - (subt);
+                        tablaReporte.setValueAt(importe, i, 6);
+                        break;
+                    case "40% de descuento":
+                        subt = ( ( precio * cantidad ) / 100 ) * (40);
+                        importe = ( precio * cantidad ) - (subt);
+                        tablaReporte.setValueAt(importe, i, 6);
+                        break;
+
+                    case "50% de descuento":
+                        subt = ( ( precio * cantidad ) / 100 ) * (50);
+                        importe = ( precio * cantidad ) - (subt);
+                        tablaReporte.setValueAt(importe, i, 6);
+                        break;
+
+                    default:
+                        importe = precio * cantidad ;
+                        tablaReporte.setValueAt(importe, i, 6);
+                        break;
+                }
+            }
+        }
+    }
+    
+    public mostrarVentas() {
+        initComponents();
+    }
+    
+    public void showVentasFolioASC(){
+        DefaultTableModel vta = (DefaultTableModel) tableVentas.getModel();
+        vta.setRowCount(0);
+        res = conexionsqlserver.ConnectionDB.Query("SELECT COUNT(folio_venta), folio_venta FROM venta GROUP BY folio_venta order by folio_venta ASC");
+        
+        try{
+            while(res.next()){
+                Vector v = new Vector();
+                v.add(res.getInt(1));
+                v.add(res.getString("folio_venta"));
+                vta.addRow(v);
+                tableVentas.setModel(vta);
+            }
+        }
+        catch(SQLException e){
+        }
+    }
+    
+    public float configurarSubtotal(){
+        float subt = 0;
+        for( int i = 0 ; i < tablaReporte.getRowCount() ; i ++ )
+        {
+            subt += Float.parseFloat(tablaReporte.getValueAt(i, 6).toString());
+        }
+        return subt;
+    }
+    
+    public float configurarIVA(){
+        float percent = (configurarSubtotal() / 100 ) * 16;
+        return percent;
+    }
+    
+    public float configurarTotal(){
+        float total = configurarSubtotal() + configurarIVA();
+        return total;
+    }
+    
+    public void showVentasFolioDESC(){
+        DefaultTableModel vta = (DefaultTableModel) tableVentas.getModel();
+        vta.setRowCount(0);
+        res = conexionsqlserver.ConnectionDB.Query("SELECT COUNT(folio_venta), folio_venta FROM venta GROUP BY folio_venta order by folio_venta DESC");
+        
+        try{
+            while(res.next()){
+                Vector v = new Vector();
+                v.add(res.getInt(1));
+                v.add(res.getString("folio_venta"));
+                vta.addRow(v);
+                tableVentas.setModel(vta);
+            }
+        }
+        catch(SQLException e){
+        }
+    }
+    
+    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableVentas = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        orden = new javax.swing.JComboBox<>();
+        btnActualizar = new javax.swing.JButton();
+        jLayeredPane3 = new javax.swing.JLayeredPane();
+        Total = new javax.swing.JTextField();
+        empleado = new javax.swing.JTextField();
+        fecha = new javax.swing.JTextField();
+        cliente = new javax.swing.JTextField();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        folio = new javax.swing.JTextField();
+        f = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        f1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaReporte = new javax.swing.JTable();
+        iva = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        subtotal = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+
+        setClosable(true);
+        setTitle("Registro de ventas");
+
+        tableVentas.setBackground(new java.awt.Color(240, 240, 240));
+        tableVentas.setFont(new java.awt.Font("Segoe UI Emoji", 0, 16)); // NOI18N
+        tableVentas.setForeground(new java.awt.Color(102, 102, 102));
+        tableVentas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "count", "Folio"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableVentas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tableVentas.setGridColor(new java.awt.Color(0, 153, 204));
+        tableVentas.setRowHeight(35);
+        tableVentas.setRowMargin(5);
+        tableVentas.setShowVerticalLines(false);
+        tableVentas.getTableHeader().setReorderingAllowed(false);
+        tableVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableVentasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableVentas);
+        if (tableVentas.getColumnModel().getColumnCount() > 0) {
+            tableVentas.getColumnModel().getColumn(0).setMinWidth(0);
+            tableVentas.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableVentas.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel1.setText("Orden de folio:");
+
+        orden.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        orden.setForeground(new java.awt.Color(51, 51, 51));
+        orden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
+        orden.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        orden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ordenItemStateChanged(evt);
+            }
+        });
+
+        btnActualizar.setFont(new java.awt.Font("Segoe UI Emoji", 0, 13)); // NOI18N
+        btnActualizar.setForeground(new java.awt.Color(51, 51, 51));
+        btnActualizar.setText("Actualizar");
+        btnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
+        jLayeredPane3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(0, 102, 153), null));
+
+        Total.setEditable(false);
+        Total.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        Total.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Total.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TotalActionPerformed(evt);
+            }
+        });
+
+        empleado.setEditable(false);
+        empleado.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        empleado.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        empleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                empleadoActionPerformed(evt);
+            }
+        });
+
+        fecha.setEditable(false);
+        fecha.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        fecha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fechaActionPerformed(evt);
+            }
+        });
+
+        cliente.setEditable(false);
+        cliente.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        cliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        cliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clienteActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel10.setText("Total $");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI Emoji", 0, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Reporte de venta");
+
+        folio.setEditable(false);
+        folio.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        folio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        folio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                folioActionPerformed(evt);
+            }
+        });
+
+        f.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        f.setForeground(new java.awt.Color(102, 102, 102));
+        f.setText("Fecha");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel2.setText("Empleado");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel3.setText("Cliente");
+
+        f1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        f1.setForeground(new java.awt.Color(102, 102, 102));
+        f1.setText("Folio");
+
+        tablaReporte.setBackground(new java.awt.Color(240, 240, 240));
+        tablaReporte.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        tablaReporte.setForeground(new java.awt.Color(102, 102, 102));
+        tablaReporte.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Producto", "Marca", "Modelo", "Precio", "Promoción", "Cantidad", "Importe", "codProducto"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaReporte.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaReporte.setGridColor(new java.awt.Color(255, 255, 255));
+        tablaReporte.setRowHeight(30);
+        tablaReporte.setRowMargin(3);
+        tablaReporte.setShowHorizontalLines(false);
+        tablaReporte.setShowVerticalLines(false);
+        tablaReporte.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tablaReporte);
+        if (tablaReporte.getColumnModel().getColumnCount() > 0) {
+            tablaReporte.getColumnModel().getColumn(7).setMinWidth(0);
+            tablaReporte.getColumnModel().getColumn(7).setPreferredWidth(0);
+            tablaReporte.getColumnModel().getColumn(7).setMaxWidth(0);
+        }
+
+        iva.setEditable(false);
+        iva.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        iva.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        iva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ivaActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel12.setText("IVA(16%) = $");
+
+        subtotal.setEditable(false);
+        subtotal.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        subtotal.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        subtotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subtotalActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel13.setText("Subtotal $");
+
+        jLayeredPane3.setLayer(Total, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(empleado, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(fecha, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(cliente, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jSeparator3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel10, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel11, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(folio, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(f, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(f1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(iva, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel12, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(subtotal, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane3Layout = new javax.swing.GroupLayout(jLayeredPane3);
+        jLayeredPane3.setLayout(jLayeredPane3Layout);
+        jLayeredPane3Layout.setHorizontalGroup(
+            jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                                        .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                                                .addComponent(f)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(empleado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(f1))
+                                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                                        .addGap(0, 656, Short.MAX_VALUE)
+                                        .addComponent(jLabel3)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(folio)
+                                    .addComponent(cliente, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane3Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Total, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane3Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane3Layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(iva, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addGap(399, 399, 399)
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane3Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(12, 12, 12)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLayeredPane3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cliente, empleado, fecha, folio});
+
+        jLayeredPane3Layout.setVerticalGroup(
+            jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(f, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(folio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(f1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(empleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2))
+                    .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(iva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(Total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(orden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnActualizar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLayeredPane3))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(orden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnActualizar))
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLayeredPane3)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        this.showVentasFolioASC();
+        orden.setSelectedIndex(0);
+        tableVentas.clearSelection();
+        
+        folio.setText("");
+        fecha.setText("");
+        empleado.setText("");
+        cliente.setText("");
+        subtotal.setText("");
+        iva.setText("");
+        Total.setText("");
+        
+        DefaultTableModel rep = (DefaultTableModel) tablaReporte.getModel();
+        rep.setRowCount(0);
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void TotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TotalActionPerformed
+
+    private void empleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empleadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_empleadoActionPerformed
+
+    private void clienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_clienteActionPerformed
+
+    private void folioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_folioActionPerformed
+
+    }//GEN-LAST:event_folioActionPerformed
+
+    private void fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fechaActionPerformed
+
+    private void ordenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ordenItemStateChanged
+        if( orden.getSelectedIndex() == 0 ){
+            this.showVentasFolioASC();
+        }
+        else if( orden.getSelectedIndex() == 1 ){
+            this.showVentasFolioDESC();
+        }
+        
+        tableVentas.clearSelection();
+        
+        folio.setText("");
+        fecha.setText("");
+        empleado.setText("");
+        cliente.setText("");
+        subtotal.setText("");
+        iva.setText("");
+        Total.setText("");
+        
+        DefaultTableModel tab = (DefaultTableModel) tablaReporte.getModel();
+        tab.setRowCount(0);
+    }//GEN-LAST:event_ordenItemStateChanged
+
+    private void ivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ivaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ivaActionPerformed
+
+    private void subtotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subtotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_subtotalActionPerformed
+
+    private void tableVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableVentasMouseClicked
+        DefaultTableModel registro = (DefaultTableModel) tablaReporte.getModel();
+        registro.setRowCount(0);
+        
+        int filaSelecTV = tableVentas.getSelectedRow(); //fila seleccionada de tabla venta
+        String folioVenta = tableVentas.getValueAt(filaSelecTV, 1).toString(); // se asigna valor de folio de la fila
+        
+        String query = 
+                "SELECT * FROM venta"
+                + " inner join producto on venta.cod_producto=producto.cod_producto"
+                + " inner join marca_producto on producto.cod_producto=marca_producto.cod_producto"
+                + " inner join marca on marca_producto.cod_marca=marca.cod_marca"
+                + " inner join modelo_producto on producto.cod_producto=modelo_producto.cod_producto"
+                + " inner join modelo on modelo_producto.cod_modelo=modelo.cod_modelo"
+                + " inner join cliente on venta.cod_cliente=cliente.cod_cliente"
+                + " inner join empleado on venta.cod_empleado=empleado.cod_empleado"
+                + " where venta.folio_venta='"+folioVenta+"'"; 
+        
+        res = conexionsqlserver.ConnectionDB.Query(query);//ejecutar consulta
+        
+        try
+        {
+            while( res.next() )
+            {
+                int CODPROD     = res.getInt("cod_producto");
+                String PRODUCTO = res.getString("nombre_producto");
+                String MARCA    = res.getString("nombre_marca");
+                String MODELO   = res.getString("nombre_modelo");
+                String PRECIO   = res.getString("precio_producto");
+                String CANTIDAD = res.getString("cantidad_venta");
+                String FECHA    = res.getString("fecha_venta");
+                
+                Object fila[] = 
+                {
+                    PRODUCTO ,
+                    MARCA , 
+                    MODELO , 
+                    PRECIO , 
+                    "" ,//promocion
+                    CANTIDAD , 
+                    "", //importe
+                    CODPROD
+                };
+                
+                registro.addRow(fila);
+                tablaReporte.setModel(registro);
+                fecha.setText(FECHA);
+                folio.setText(folioVenta);
+            }
+        }
+        catch( SQLException e )
+        {
+            JOptionPane.showMessageDialog(null, "Error al insertar filas de venta");
+        }
+        
+        res = conexionsqlserver.ConnectionDB.Query("select * from cliente inner join venta on cliente.cod_cliente=venta.cod_cliente and venta.folio_venta='"+folioVenta+"'");
+        try
+        {
+            while( res.next() )
+            {
+                String nombreCli = res.getString("nombres_cliente");
+                String appCli    = res.getString("apellidop_cliente");
+                String apmCli    = res.getString("apellidom_cliente");
+                
+                cliente.setText(nombreCli + " " + appCli + " " + apmCli);
+            }
+        }
+        catch( SQLException e )
+        {
+            JOptionPane.showMessageDialog(null, "Error al insertar cliente");
+        }
+        
+        res = conexionsqlserver.ConnectionDB.Query("select * from empleado inner join venta on empleado.cod_empleado=venta.cod_empleado and venta.folio_venta='"+folioVenta+"'");
+        try
+        {
+            while( res.next() )
+            {
+                String nombreEmp = res.getString("nombres_empleado");
+                String appEmp    = res.getString("apellidop_empleado");
+                String apmEmp    = res.getString("apellidom_empleado");
+                
+                empleado.setText(nombreEmp + " " + appEmp + " " + apmEmp);
+            }
+        }
+        catch( SQLException e )
+        {
+            JOptionPane.showMessageDialog(null, "Error al insertar empleado");
+        }
+        ////////////////
+        for( int i = 0 ; i < tablaReporte.getRowCount() ; i ++ )
+        {
+            int codProd = Integer.parseInt(tablaReporte.getValueAt(i, 7).toString());
+            String PROMOCION = null;
+            
+            res = conexionsqlserver.ConnectionDB.Query("select * from venta"
+                    + " inner join promo_venta on venta.folio_venta=promo_venta.folio_venta"
+                    + " inner join promocion on promo_venta.cod_producto=promocion.cod_producto"
+                    + " and promo_venta.folio_venta="+folio.getText()
+                    + " and promo_venta.cod_producto="+codProd);
+            try
+            {
+                while( res.next() )
+                {
+                    PROMOCION = res.getString("descripcion_promocion");
+                }
+            }
+            catch( SQLException e )
+            {
+                JOptionPane.showMessageDialog(null, "Error al mostrar promociones");
+            }
+            
+            tablaReporte.setValueAt(PROMOCION, i, 4);
+        }
+        
+        this.configurarImporte();
+        subtotal.setText( String.valueOf(configurarSubtotal()) );
+        iva.setText( String.valueOf(configurarIVA()) );
+        Total.setText(String.valueOf(configurarTotal()));
+    }//GEN-LAST:event_tableVentasMouseClicked
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField Total;
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JTextField cliente;
+    private javax.swing.JTextField empleado;
+    private javax.swing.JLabel f;
+    private javax.swing.JLabel f1;
+    private javax.swing.JTextField fecha;
+    private javax.swing.JTextField folio;
+    private javax.swing.JTextField iva;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLayeredPane jLayeredPane3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JComboBox<String> orden;
+    private javax.swing.JTextField subtotal;
+    private javax.swing.JTable tablaReporte;
+    private javax.swing.JTable tableVentas;
+    // End of variables declaration//GEN-END:variables
+}

@@ -1166,5 +1166,5 @@ go
 update promocion set folio_venta = 'asdfgh' where cod_promocion=3
 go
 
-select * from promo_venta
+select * from estado_cuenta
 go

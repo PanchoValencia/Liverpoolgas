@@ -10,8 +10,8 @@ package conexionsqlserver;
  * @author JoséFrancisco
  */
 public class to_do {
-    
-    //*.- terminar todo de estado de cuenta
+    //*.- en ver venta que se vea la promocion validando la fecha si se vendio cuando existia promo
+    //*.- en promociones que no se agrege otra promocion a un producto que ya tenga
     //*.- realizar todo de cambios
     //*.- realizar todo de devoluciones
     //*.- Derian, terminar la parte de compra

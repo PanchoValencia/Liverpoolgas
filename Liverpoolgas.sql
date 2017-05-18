@@ -240,6 +240,7 @@ GO
 
 CREATE TABLE estado_cuenta
 (
+	cod_ec integer primary key identity(1,1) not null,
 	cod_cliente integer foreign key references cliente(cod_cliente) not null,
 	folio_venta varchar(15) not null,
 	fecha_limite_ec date,
@@ -1174,5 +1175,10 @@ go
 update promocion set folio_venta = 'asdfgh' where cod_promocion=3
 go
 
+select * from venta
+go
+
 select * from estado_cuenta
 go
+
+SELECT * FROM estado_cuenta WHERE folio_venta='17518257412' AND abono_ec is not NULL

@@ -191,7 +191,7 @@ public class estadoCuenta extends javax.swing.JFrame {
         try
         {
             storedProcedures.newEC(codCte, fol, fechaL, tot);
-            JOptionPane.showMessageDialog(null, "Estado de cuenta creado correctamente", "Genial", JOptionPane.INFORMATION_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Estado de cuenta creado correctamente", "Genial", JOptionPane.INFORMATION_MESSAGE);
         }
         catch(SQLException e)
         {

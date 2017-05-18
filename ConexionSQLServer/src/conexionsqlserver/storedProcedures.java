@@ -697,4 +697,16 @@ public class storedProcedures {
         add.setFloat(4, total);
         add.execute();
     }
+    
+    public static void abonoEC( int codCte , String folio , String fechaLim , float abono , float total , String fechaAbono)throws SQLException{
+        CallableStatement add = ConnectionDB.GetConnection().prepareCall("{call abonoEC(?,?,?,?,?,?)}");
+        
+        add.setInt(1, codCte);
+        add.setString(2, folio);
+        add.setString(3, fechaLim);
+        add.setFloat(4, abono);
+        add.setFloat(5, total);
+        add.setString(6, fechaAbono);
+        add.execute();
+    }
 }

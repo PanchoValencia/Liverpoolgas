@@ -53,7 +53,7 @@ public class App extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem10 = new javax.swing.JMenuItem();
+        estadoCuenta = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         irPromociones = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
@@ -176,10 +176,15 @@ public class App extends javax.swing.JFrame {
         archivo.add(jMenuItem9);
         archivo.add(jSeparator5);
 
-        jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489003165_documents-01.png"))); // NOI18N
-        jMenuItem10.setText("Estado de Cuenta");
-        jMenuItem10.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        archivo.add(jMenuItem10);
+        estadoCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489003165_documents-01.png"))); // NOI18N
+        estadoCuenta.setText("Estado de Cuenta");
+        estadoCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        estadoCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadoCuentaActionPerformed(evt);
+            }
+        });
+        archivo.add(estadoCuenta);
         archivo.add(jSeparator6);
 
         irPromociones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489003225_Technology_Mix_-_Final-17.png"))); // NOI18N
@@ -363,6 +368,18 @@ public class App extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_irPromocionesActionPerformed
 
+    private void estadoCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoCuentaActionPerformed
+        adminEstadoCuenta ec = new adminEstadoCuenta();
+        
+        dpnEscritorio.add(ec);
+        ec.show();
+        try {
+            ec.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_estadoCuentaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -409,12 +426,12 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JMenuItem bajaProv;
     private javax.swing.JDesktopPane dpnEscritorio;
     private javax.swing.JMenuItem empleadosBajas;
+    private javax.swing.JMenuItem estadoCuenta;
     private javax.swing.JMenuItem irPromociones;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem8;

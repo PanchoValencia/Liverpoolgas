@@ -43,7 +43,6 @@ public class estadoCuenta extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         total = new javax.swing.JTextField();
-        btnRealizar = new javax.swing.JButton();
         fecha = new javax.swing.JTextField();
         limitePago = new javax.swing.JTextField();
 
@@ -100,17 +99,6 @@ public class estadoCuenta extends javax.swing.JFrame {
         total.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         total.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        btnRealizar.setBackground(new java.awt.Color(0, 102, 204));
-        btnRealizar.setFont(new java.awt.Font("Segoe UI Light", 1, 13)); // NOI18N
-        btnRealizar.setForeground(new java.awt.Color(240, 240, 240));
-        btnRealizar.setText("Realizar");
-        btnRealizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnRealizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRealizarActionPerformed(evt);
-            }
-        });
-
         fecha.setEditable(false);
         fecha.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         fecha.setForeground(new java.awt.Color(51, 51, 51));
@@ -155,8 +143,7 @@ public class estadoCuenta extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(total, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .addComponent(limitePago)))
-                    .addComponent(btnRealizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(limitePago))))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -188,33 +175,11 @@ public class estadoCuenta extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(51, 51, 51)
-                .addComponent(btnRealizar)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnRealizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRealizarActionPerformed
-        
-        String cod[]  = cliente.getText().split("");
-        int codCte    = Integer.parseInt(cod[0]);
-        String fol    = folio.getText();
-        String fechaL = limitePago.getText();
-        float tot     = Float.parseFloat(total.getText());
-        
-        try
-        {
-            storedProcedures.newEC(codCte, fol, fechaL, tot);
-            JOptionPane.showMessageDialog(null, "Estado de cuenta creado correctamente", "Genial", JOptionPane.INFORMATION_MESSAGE);
-        }
-        catch(SQLException e)
-        {
-            JOptionPane.showMessageDialog(null, "Error al crear estado de cuenta", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        this.dispose();
-    }//GEN-LAST:event_btnRealizarActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         String cod[]  = cliente.getText().split("");
@@ -271,7 +236,6 @@ public class estadoCuenta extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRealizar;
     public javax.swing.JTextField cliente;
     public javax.swing.JTextField fecha;
     public javax.swing.JTextField folio;

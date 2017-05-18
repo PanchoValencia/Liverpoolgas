@@ -1065,7 +1065,15 @@ go
 go
 create proc newEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @total float(53) )
 as begin
-INSERT INTO estado_cuenta( cod_cliente , folio_venta , fecha_limite_ec , total_ec ) values( @cod , @folio , @fechaLim , @total )
+INSERT INTO estado_cuenta( cod_cliente , folio_venta , fecha_limite_ec , total_ec ) values( @cod , @folio , convert(date, @fechaLim) , @total )
+end
+go
+
+/*Abonar en estado de cuenta*/
+go
+create proc abonoEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @abono float(53) , @total float(53) , @fechaAbono varchar(10) )
+as begin
+INSERT INTO estado_cuenta( cod_cliente , folio_venta , fecha_limite_ec , abono_ec , total_ec , fecha_abono ) values( @cod , @folio , convert( date , @fechaLim ) , @abono , @total , convert( date , @fechaAbono ) )
 end
 go
 

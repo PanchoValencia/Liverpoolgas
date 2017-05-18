@@ -5,6 +5,16 @@
  */
 package views;
 
+import conexionsqlserver.Validations;
+import conexionsqlserver.classDate;
+import conexionsqlserver.storedProcedures;
+import conexionsqlserver.temporalVariables;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author JoséFrancisco
@@ -14,6 +24,80 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
     /**
      * Creates new form adminEstadoCuenta
      */
+    static ResultSet res;
+    
+    public void showCte(String buscar){
+        DefaultTableModel cte = (DefaultTableModel) tablaCte.getModel();
+        cte.setRowCount(0);
+        res = conexionsqlserver.ConnectionDB.Query(
+            "SELECT * FROM cliente WHERE nombres_cliente LIKE '%"+buscar+"%' AND cliente.activo="+1+" ORDER BY nombres_cliente"
+        );
+        
+        try{
+            while(res.next()){
+                Vector v = new Vector();
+                v.add(res.getInt("cod_cliente"));
+                v.add(res.getString("nombres_cliente"));
+                v.add(res.getString("apellidop_cliente"));
+                v.add(res.getString("apellidom_cliente"));
+                cte.addRow(v);
+                tablaCte.setModel(cte);
+            }
+        }
+        catch(SQLException e){
+        }
+    }
+    
+    public void showCreditos(int codCte){
+        DefaultTableModel cred = (DefaultTableModel) tablaCreditos.getModel();
+        cred.setRowCount(0);
+        res = conexionsqlserver.ConnectionDB.Query(
+            "SELECT COUNT(folio_venta), folio_venta FROM estado_cuenta WHERE cod_cliente="+codCte+" GROUP BY folio_venta ORDER BY folio_venta"
+        );
+        
+        try{
+            while(res.next()){
+                Vector v = new Vector();
+                v.add(res.getString("folio_venta"));
+                //v.add(res.getString("fecha_limite_ec"));
+                //v.add(res.getString("total_ec"));
+                cred.addRow(v);
+                tablaCreditos.setModel(cred);
+            }
+        }
+        catch(SQLException e){
+        }
+    }
+    
+    public void showCreditosComplementos(){
+        DefaultTableModel comp = (DefaultTableModel) tablaComplemento.getModel();
+        comp.setRowCount(0);
+        
+        int filasTablaCred = tablaCreditos.getRowCount();
+        for( int i = 0 ; i < filasTablaCred ; i ++)
+        {
+            String fol = tablaCreditos.getValueAt(i, 0).toString();
+            res = conexionsqlserver.ConnectionDB.Query(
+                    aqui vamos jijijiji
+                "SELECT TOP(1) folio_venta, fecha_limite_ec , total_ec FROM estado_cuenta WHERE folio_venta='"+fol+"' ORDER BY total_ec DESC"
+            );
+
+            try{
+                while(res.next()){
+                    Vector v = new Vector();
+                    v.add(res.getString("fecha_limite_ec"));
+                    v.add(res.getString("total_ec"));
+                    comp.addRow(v);
+                    tablaComplemento.setModel(comp);
+                }
+            }
+            catch(SQLException e){
+            }
+        }
+        
+        
+    }
+    
     public adminEstadoCuenta() {
         initComponents();
     }
@@ -29,13 +113,22 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jLabel13 = new javax.swing.JLabel();
-        txtBuscarProd = new javax.swing.JTextField();
+        buscarCte = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaCte = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         jLayeredPane2 = new javax.swing.JLayeredPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tablaCreditos = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaComplemento = new javax.swing.JTable();
+        jLayeredPane3 = new javax.swing.JLayeredPane();
+        jLabel1 = new javax.swing.JLabel();
+        btnAbonar = new javax.swing.JButton();
+        fechaAbono = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        abono = new javax.swing.JTextField();
+        btnReset = new javax.swing.JButton();
 
         setTitle("Administrar estados de cuenta");
 
@@ -44,19 +137,22 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
         jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1491881015_search.png"))); // NOI18N
         jLabel13.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        txtBuscarProd.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
-        txtBuscarProd.addActionListener(new java.awt.event.ActionListener() {
+        buscarCte.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
+        buscarCte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarProdActionPerformed(evt);
+                buscarCteActionPerformed(evt);
             }
         });
-        txtBuscarProd.addKeyListener(new java.awt.event.KeyAdapter() {
+        buscarCte.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtBuscarProdKeyReleased(evt);
+                buscarCteKeyReleased(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCte.setBackground(new java.awt.Color(240, 240, 240));
+        tablaCte.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        tablaCte.setForeground(new java.awt.Color(0, 102, 153));
+        tablaCte.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -72,11 +168,21 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(70);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablaCte.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaCte.setRowHeight(25);
+        tablaCte.setRowMargin(3);
+        tablaCte.setShowVerticalLines(false);
+        tablaCte.getTableHeader().setReorderingAllowed(false);
+        tablaCte.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaCteMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaCte);
+        if (tablaCte.getColumnModel().getColumnCount() > 0) {
+            tablaCte.getColumnModel().getColumn(0).setMinWidth(40);
+            tablaCte.getColumnModel().getColumn(0).setPreferredWidth(70);
+            tablaCte.getColumnModel().getColumn(0).setMaxWidth(100);
         }
 
         jLabel9.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
@@ -84,7 +190,7 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
         jLabel9.setText("Cliente");
 
         jLayeredPane1.setLayer(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(txtBuscarProd, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(buscarCte, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jLabel9, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -99,7 +205,7 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBuscarProd, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buscarCte, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(jLabel13)))
                 .addContainerGap())
@@ -111,34 +217,74 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtBuscarProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buscarCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel9)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
 
         jLayeredPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Créditos del cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Emoji", 0, 14), new java.awt.Color(0, 102, 204))); // NOI18N
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCreditos.setBackground(new java.awt.Color(240, 240, 240));
+        tablaCreditos.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        tablaCreditos.setForeground(new java.awt.Color(0, 102, 153));
+        tablaCreditos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Folio", "Fecha límite", "Saldo"
+                "Folio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        tablaCreditos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaCreditos.setIntercellSpacing(new java.awt.Dimension(1, 3));
+        tablaCreditos.setRowHeight(25);
+        tablaCreditos.setShowVerticalLines(false);
+        tablaCreditos.getTableHeader().setReorderingAllowed(false);
+        tablaCreditos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaCreditosMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaCreditos);
+
+        tablaComplemento.setBackground(new java.awt.Color(240, 240, 240));
+        tablaComplemento.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        tablaComplemento.setForeground(new java.awt.Color(0, 102, 153));
+        tablaComplemento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Fecha límite", "Saldo"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaComplemento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaComplemento.setIntercellSpacing(new java.awt.Dimension(1, 3));
+        tablaComplemento.setRowHeight(25);
+        tablaComplemento.setShowVerticalLines(false);
+        tablaComplemento.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(tablaComplemento);
 
         jLayeredPane2.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
@@ -146,16 +292,110 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jLayeredPane2Layout.setVerticalGroup(
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
+
+        jLayeredPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Abono a  la cuenta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Emoji", 0, 14), new java.awt.Color(0, 102, 204))); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel1.setText("Fecha");
+
+        btnAbonar.setBackground(new java.awt.Color(0, 102, 153));
+        btnAbonar.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
+        btnAbonar.setForeground(new java.awt.Color(240, 240, 240));
+        btnAbonar.setText("ABONAR");
+        btnAbonar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAbonar.setEnabled(false);
+        btnAbonar.setFocusTraversalPolicyProvider(true);
+        btnAbonar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbonarActionPerformed(evt);
+            }
+        });
+
+        fechaAbono.setEditable(false);
+        fechaAbono.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
+        fechaAbono.setForeground(new java.awt.Color(51, 51, 51));
+        fechaAbono.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel2.setText("Abono");
+
+        abono.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
+        abono.setForeground(new java.awt.Color(51, 51, 51));
+        abono.setEnabled(false);
+        abono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                abonoKeyReleased(evt);
+            }
+        });
+
+        jLayeredPane3.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(btnAbonar, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(fechaAbono, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(abono, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane3Layout = new javax.swing.GroupLayout(jLayeredPane3);
+        jLayeredPane3.setLayout(jLayeredPane3Layout);
+        jLayeredPane3Layout.setHorizontalGroup(
+            jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fechaAbono, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnAbonar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(abono, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jLayeredPane3Layout.setVerticalGroup(
+            jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(fechaAbono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(abono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnAbonar)
+                .addContainerGap())
+        );
+
+        btnReset.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
+        btnReset.setForeground(new java.awt.Color(20, 20, 20));
+        btnReset.setText("Reestablecer");
+        btnReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -164,41 +404,184 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLayeredPane2)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnReset)
+                        .addGap(34, 34, 34))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnReset)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtBuscarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarProdActionPerformed
+    private void buscarCteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarCteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarProdActionPerformed
+    }//GEN-LAST:event_buscarCteActionPerformed
 
-    private void txtBuscarProdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarProdKeyReleased
+    private void buscarCteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarCteKeyReleased
+        showCte(buscarCte.getText());
         
-    }//GEN-LAST:event_txtBuscarProdKeyReleased
+        if( buscarCte.getText().isEmpty() )
+        {
+            DefaultTableModel tabCte = (DefaultTableModel) tablaCte.getModel();
+            tabCte.setRowCount(0);
+        }
+        
+        DefaultTableModel tabCred = (DefaultTableModel) tablaCreditos.getModel();
+        tabCred.setRowCount(0);
+        fechaAbono.setText("");
+        abono.setText("");
+        abono.setEnabled(false);
+        btnAbonar.setEnabled(false);
+    }//GEN-LAST:event_buscarCteKeyReleased
+
+    private void tablaCteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCteMouseClicked
+        int row = tablaCte.getSelectedRow();
+        int codCte = Integer.parseInt(tablaCte.getValueAt(row, 0).toString());
+        showCreditos(codCte);
+        showCreditosComplementos();
+    }//GEN-LAST:event_tablaCteMouseClicked
+
+    private void tablaCreditosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCreditosMouseClicked
+        classDate date = new classDate();
+        date.setearFecha();
+        fechaAbono.setText((String)temporalVariables.getFechaActual());
+        
+        abono.setText("");
+        abono.setEnabled(true);
+        btnAbonar.setEnabled(false);
+    }//GEN-LAST:event_tablaCreditosMouseClicked
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        buscarCte.setText("");
+        DefaultTableModel tabCte = (DefaultTableModel) tablaCte.getModel();
+        tabCte.setRowCount(0);
+        DefaultTableModel tabCre = (DefaultTableModel) tablaCreditos.getModel();
+        tabCre.setRowCount(0);
+        
+        fechaAbono.setText("");
+        abono.setText("");
+        abono.setEnabled(false);
+        btnAbonar.setEnabled(false);
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void abonoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_abonoKeyReleased
+        
+        if( Validations.validarFloat(abono.getText()) )
+        {
+            if( abono.getText().isEmpty() )
+            {
+                //
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Sólo números, admite punto decimal!!", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                abono.setText("");
+                btnAbonar.setEnabled(false);
+            }
+        }
+        else if( Validations.lenght(abono.getText(), 53) )
+        {
+            JOptionPane.showMessageDialog(null, "Sólo admiten 53 caracteres de lonigtud", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            abono.setText("");
+            btnAbonar.setEnabled(false);
+        }
+        else
+        {
+            int rowCred = tablaCreditos.getSelectedRow();
+            double cantDeuda = Double.parseDouble(tablaCreditos.getValueAt(rowCred, 2).toString());
+            double cantAbono = Double.parseDouble(abono.getText());
+            
+            if( cantAbono > cantDeuda )
+            {
+                JOptionPane.showMessageDialog(null, "El abono sobrepasa la deuda, inserta otra cantidad", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                abono.setText("");
+                btnAbonar.setEnabled(false);
+            }
+            else
+            {
+                btnAbonar.setEnabled(true);
+            }
+        }
+    }//GEN-LAST:event_abonoKeyReleased
+
+    private void btnAbonarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbonarActionPerformed
+        int opt = JOptionPane.showConfirmDialog(this, "¿Está seguro de abonar dicha cantidad?", "Responder", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if( opt == JOptionPane.NO_OPTION )
+        {
+            // do_nothing
+        }
+        else{
+            int rowCte = tablaCte.getSelectedRow();
+            int rowCre = tablaCreditos.getSelectedRow();
+            
+            int codCte        = Integer.parseInt(tablaCte.getValueAt(rowCte, 0).toString());
+            String folioVenta = tablaCreditos.getValueAt(rowCre, 0).toString();
+            String fechaLim   = tablaCreditos.getValueAt(rowCre, 1).toString();
+            float Abono       = Float.parseFloat(abono.getText());
+            float tot         = Float.parseFloat(tablaCreditos.getValueAt(rowCre, 2).toString());
+            float Total       = tot - Abono;
+            String fechaAb    = fechaAbono.getText();
+            
+            try
+            {
+                storedProcedures.abonoEC(codCte, folioVenta, fechaLim, Abono, Total, fechaAb);
+                JOptionPane.showMessageDialog(null, "Abono creado correctamente!!", "Genial" , JOptionPane.INFORMATION_MESSAGE);
+                
+                tablaCte.clearSelection();
+                tablaCreditos.clearSelection();
+                fechaAbono.setText("");
+                abono.setText("");
+                abono.setEnabled(false);
+                btnAbonar.setEnabled(false);
+                showCreditos(codCte);
+            }
+            catch( SQLException e )
+            {
+                JOptionPane.showMessageDialog(null, "Error, no se realizó el abono");
+            }
+        }
+    }//GEN-LAST:event_btnAbonarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField abono;
+    private javax.swing.JButton btnAbonar;
+    private javax.swing.JButton btnReset;
+    private javax.swing.JTextField buscarCte;
+    private javax.swing.JTextField fechaAbono;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
+    private javax.swing.JLayeredPane jLayeredPane3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField txtBuscarProd;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable tablaComplemento;
+    private javax.swing.JTable tablaCreditos;
+    private javax.swing.JTable tablaCte;
     // End of variables declaration//GEN-END:variables
 }

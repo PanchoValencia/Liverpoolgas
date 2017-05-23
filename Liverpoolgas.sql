@@ -61,7 +61,7 @@ CREATE TABLE producto
 (
 	cod_producto integer primary key identity(1,1) not null,
 	nombre_producto varchar(30),
-	precio_producto float(53),
+	precio_producto float(2),
 	cantidad_producto integer,
 	descripcion_producto varchar(50),
 	activo integer not null
@@ -181,7 +181,7 @@ CREATE TABLE venta
 	cod_producto integer foreign key references producto(cod_producto) not null,
 	folio_venta varchar (15),
 	fecha_venta  date,
-	precio_venta float(53),
+	precio_venta float(2),
 	cantidad_venta integer
 )
 GO
@@ -193,7 +193,7 @@ CREATE TABLE compra
 	cod_producto integer foreign key references producto(cod_producto) not null,
 	folio_compra varchar(15),
 	fecha_compra date,
-	precio_compra float(53),
+	precio_compra float(2),
 	cantidad_compra integer
 )
 GO
@@ -232,7 +232,7 @@ CREATE TABLE cambio
 	cod_producto integer foreign key references producto(cod_producto) not null,
 	cod_cliente integer foreign key references cliente(cod_cliente) not null,
 	folio_cambio varchar(15),
-	diferencia float(53),
+	diferencia float(2),
 	nuevop_cambio varchar(50),
 	fecha_cambio date
 )
@@ -244,8 +244,8 @@ CREATE TABLE estado_cuenta
 	cod_cliente integer foreign key references cliente(cod_cliente) not null,
 	folio_venta varchar(15) not null,
 	fecha_limite_ec date,
-	abono_ec float(53),
-	total_ec float(53),
+	abono_ec float(2),
+	total_ec float(2),
 	fecha_abono date
 )
 GO
@@ -671,7 +671,7 @@ go
 
 /*Agregar en producto*/
 go
-create proc addProd( @nombre varchar(30) , @precio float(53) , @cantidad int , @desc varchar(50) )
+create proc addProd( @nombre varchar(30) , @precio float(2) , @cantidad int , @desc varchar(50) )
 as begin
 insert into producto( nombre_producto , precio_producto , cantidad_producto , descripcion_producto , activo ) values( @nombre , @precio , @cantidad , @desc , 1 )
 end
@@ -735,7 +735,7 @@ go
 
 /*Actualizar un producto completo*/
 go
-create proc updateProd( @cod int , @nombre varchar(30) , @precio float(53) , @cantidad int , @desc varchar(50) , @modelo varchar(20) , @color varchar(20) )
+create proc updateProd( @cod int , @nombre varchar(30) , @precio float(2) , @cantidad int , @desc varchar(50) , @modelo varchar(20) , @color varchar(20) )
 as begin
 update producto set nombre_producto=@nombre , precio_producto=@precio , cantidad_producto=@cantidad , descripcion_producto=@desc where cod_producto=@cod
 update modelo set nombre_modelo=@modelo where cod_modelo=@cod
@@ -1047,7 +1047,7 @@ go
 /*:::::VENTAS:::::*/
 /*insertar venta*/
 go
-create proc nuevaVenta( @codEmp int , @codCte int , @codProd int , @folio varchar(15) , @fecha varchar(10) , @precio float(53) , @cantidad int )
+create proc nuevaVenta( @codEmp int , @codCte int , @codProd int , @folio varchar(15) , @fecha varchar(10) , @precio float(2) , @cantidad int )
 as begin
 insert into venta( cod_empleado , cod_cliente , cod_producto , folio_venta , fecha_venta , precio_venta , cantidad_venta ) values( @codEmp , @codCte , @codProd , @folio , convert(date , @fecha) , @precio , @cantidad )
 end
@@ -1064,7 +1064,7 @@ go
 /*:::::ESTADO DE CUENTA:::::*/
 /*Nuevo estado de cuenta al hacer venta de crédito*/
 go
-create proc newEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @total float(53) )
+create proc newEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @total float(2) )
 as begin
 INSERT INTO estado_cuenta( cod_cliente , folio_venta , fecha_limite_ec , total_ec ) values( @cod , @folio , convert(date, @fechaLim) , @total )
 end
@@ -1072,11 +1072,29 @@ go
 
 /*Abonar en estado de cuenta*/
 go
-create proc abonoEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @abono float(53) , @total float(53) , @fechaAbono varchar(10) )
+create proc abonoEC( @cod int , @folio varchar(15) , @fechaLim varchar(10) , @abono float(2) , @total float(2) , @fechaAbono varchar(10) )
 as begin
 INSERT INTO estado_cuenta( cod_cliente , folio_venta , fecha_limite_ec , abono_ec , total_ec , fecha_abono ) values( @cod , @folio , convert( date , @fechaLim ) , @abono , @total , convert( date , @fechaAbono ) )
 end
 go
+
+/*:::::COMPRAS:::::*/
+/*insertar compra*/
+go
+create proc nuevaCompra( @codProv int , @codProd int , @folio varchar(15) , @fecha varchar(10) , @precio float(2) , @cantidad int )
+as begin
+insert into compra( cod_proveedor, cod_producto , folio_compra , fecha_compra , precio_compra , cantidad_compra ) values( @codProv, @codProd , @folio , convert(date , @fecha) , @precio , @cantidad )
+end
+go
+
+/*sumar producto cuando se realiza compra*/
+go
+create proc sumPxC( @cod int , @cant int )
+as begin
+update producto set cantidad_producto=@cant where cod_producto=@cod
+end
+go
+
 
 
 /*---------------------------------------------------------------------*/
@@ -1182,3 +1200,5 @@ select * from estado_cuenta
 go
 
 SELECT * FROM estado_cuenta WHERE folio_venta='17518257412' AND abono_ec is not NULL
+
+SELECT COUNT(folio_venta), folio_venta FROM estado_cuenta WHERE cod_cliente=1 GROUP BY folio_venta ORDER BY folio_venta

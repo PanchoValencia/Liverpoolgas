@@ -709,4 +709,27 @@ public class storedProcedures {
         add.setString(6, fechaAbono);
         add.execute();
     }
+    
+    
+    //:::::COMPRAS::::
+    public static void nuevaCompra( int codProv, int codProd , String folio , String fecha , float precio , int cantidad )throws SQLException{
+        CallableStatement add = ConnectionDB.GetConnection().prepareCall("{call nuevaCompra(?,?,?,?,?,?)}");
+        
+        add.setInt(1, codProv);
+        add.setInt(2, codProd);
+        add.setString(3, folio);
+        add.setString(4, fecha);
+        add.setFloat(5, precio);
+        add.setInt(6, cantidad);
+        add.execute();
+    }
+
+    public static void sumPxC( int cod , int cant )throws SQLException{
+        CallableStatement update = ConnectionDB.GetConnection().prepareCall("{call sumPxC(?,?)}");
+        
+        update.setInt(1, cod);
+        update.setInt(2, cant);
+        update.execute();
+    }
+
 }

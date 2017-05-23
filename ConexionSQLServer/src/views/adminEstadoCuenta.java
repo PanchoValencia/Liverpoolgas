@@ -100,8 +100,9 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
                     
                     if( Float.parseFloat(tablaComplemento.getValueAt(numRow, 1).toString()) == 0 )
                     {
-                        comp.removeRow(numRow);
-                        otraT.removeRow(numRow);
+                        //comp.removeRow(numRow);
+                        //otraT.removeRow(numRow);
+                        //filasTablaCred --;
                     }
                 }
             }
@@ -544,12 +545,23 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
         date.setearFecha();
         fechaAbono.setText((String)temporalVariables.getFechaActual());
         
-        abono.setText("");
-        abono.setEnabled(true);
-        btnAbonar.setEnabled(false);
+        
         tablaComplemento.clearSelection();
         int numFila = tablaCreditos.getSelectedRow();
         tablaComplemento.setRowSelectionInterval(numFila, numFila);
+        float saldo = Float.parseFloat(tablaComplemento.getValueAt(tablaComplemento.getSelectedRow(), 1).toString());
+        if( saldo == 0 )
+        {
+            abono.setText("");
+            abono.setEnabled(false);
+            btnAbonar.setEnabled(false);
+        }
+        else
+        {
+            abono.setText("");
+            abono.setEnabled(true);
+            btnAbonar.setEnabled(false);
+        }
         btnHistorial.setEnabled(true);
     }//GEN-LAST:event_tablaCreditosMouseClicked
 
@@ -642,6 +654,7 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
                 btnHistorial.setEnabled(false);
                 showCreditos(codCte);
                 showCreditosComplementos();
+                setearStatus();
             }
             catch( SQLException e )
             {
@@ -655,12 +668,22 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
         date.setearFecha();
         fechaAbono.setText((String)temporalVariables.getFechaActual());
         
-        abono.setText("");
-        abono.setEnabled(true);
-        btnAbonar.setEnabled(false);
         tablaCreditos.clearSelection();
         int numFila = tablaComplemento.getSelectedRow();
         tablaCreditos.setRowSelectionInterval(numFila, numFila);
+        float saldo = Float.parseFloat(tablaComplemento.getValueAt(tablaComplemento.getSelectedRow(), 1).toString());
+        if( saldo == 0 )
+        {
+            abono.setText("");
+            abono.setEnabled(false);
+            btnAbonar.setEnabled(false);
+        }
+        else
+        {
+            abono.setText("");
+            abono.setEnabled(true);
+            btnAbonar.setEnabled(false);
+        }
         btnHistorial.setEnabled(true);
     }//GEN-LAST:event_tablaComplementoMouseClicked
 

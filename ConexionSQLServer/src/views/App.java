@@ -42,8 +42,8 @@ public class App extends javax.swing.JFrame {
         verVentas = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        irCompras = new javax.swing.JMenuItem();
+        irMostrarCompra = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         adminProducto = new javax.swing.JMenu();
         adminProductos = new javax.swing.JMenuItem();
@@ -124,15 +124,25 @@ public class App extends javax.swing.JFrame {
         jMenu2.setText("Compras");
         jMenu2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1488968582_add-buy-plus-shopping-cart.png"))); // NOI18N
-        jMenuItem4.setText("Nueva");
-        jMenuItem4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenu2.add(jMenuItem4);
+        irCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1488968582_add-buy-plus-shopping-cart.png"))); // NOI18N
+        irCompras.setText("Nueva");
+        irCompras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        irCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                irComprasActionPerformed(evt);
+            }
+        });
+        jMenu2.add(irCompras);
 
-        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1488968643_meanicons_57.png"))); // NOI18N
-        jMenuItem5.setText("Modificar / Eliminar");
-        jMenuItem5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenu2.add(jMenuItem5);
+        irMostrarCompra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1488968643_meanicons_57.png"))); // NOI18N
+        irMostrarCompra.setText("Mostrar compras");
+        irMostrarCompra.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        irMostrarCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                irMostrarCompraActionPerformed(evt);
+            }
+        });
+        jMenu2.add(irMostrarCompra);
 
         archivo.add(jMenu2);
         archivo.add(jSeparator3);
@@ -380,6 +390,30 @@ public class App extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_estadoCuentaActionPerformed
 
+    private void irComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irComprasActionPerformed
+        compra c = new compra();
+        
+        dpnEscritorio.add(c);
+        c.show();
+        try {
+            c.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_irComprasActionPerformed
+
+    private void irMostrarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irMostrarCompraActionPerformed
+        mostrarCompras mc = new mostrarCompras();
+        
+        dpnEscritorio.add(mc);
+        mc.show();
+        try {
+            mc.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_irMostrarCompraActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -427,13 +461,13 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JDesktopPane dpnEscritorio;
     private javax.swing.JMenuItem empleadosBajas;
     private javax.swing.JMenuItem estadoCuenta;
+    private javax.swing.JMenuItem irCompras;
+    private javax.swing.JMenuItem irMostrarCompra;
     private javax.swing.JMenuItem irPromociones;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPopupMenu.Separator jSeparator1;

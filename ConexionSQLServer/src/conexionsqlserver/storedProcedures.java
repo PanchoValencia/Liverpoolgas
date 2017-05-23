@@ -731,5 +731,17 @@ public class storedProcedures {
         update.setInt(2, cant);
         update.execute();
     }
+    
+    //:::::DEVOLUCIONES:::::
+    public static void newDevolucion( int codProd, int codCte , String fecha , String folio , float monto )throws SQLException{
+        CallableStatement add = ConnectionDB.GetConnection().prepareCall("{call newDevolucion(?,?,?,?,?)}");
+        
+        add.setInt(1, codProd);
+        add.setInt(2, codCte);
+        add.setString(3, fecha);
+        add.setString(4, folio);
+        add.setFloat(5, monto);
+        add.execute();
+    }
 
 }

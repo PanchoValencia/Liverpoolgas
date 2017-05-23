@@ -183,5 +183,20 @@ public class Validations {
         catch(SQLException e){}
         return false;
     }
+    
+    public static boolean validarQuotes( String palabra )
+    {
+        String cad[] = palabra.split("");
+        
+        for( int i = 0 ; i < cad.length ; i ++ )
+        {
+            if( cad[i].equals("'") || cad[i].equals("`") || cad[i].equals("´") )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
 

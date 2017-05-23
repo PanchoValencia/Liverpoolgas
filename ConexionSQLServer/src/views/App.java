@@ -50,8 +50,12 @@ public class App extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         adminMarcas = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        irCambios = new javax.swing.JMenuItem();
+        irMostrarCambios = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        irDevoluciones = new javax.swing.JMenuItem();
+        irMostrarDevoluciones = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         estadoCuenta = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
@@ -175,15 +179,48 @@ public class App extends javax.swing.JFrame {
         archivo.add(adminProducto);
         archivo.add(jSeparator4);
 
-        jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489002846_interact.png"))); // NOI18N
-        jMenuItem8.setText("Cambios");
-        jMenuItem8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        archivo.add(jMenuItem8);
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489002846_interact.png"))); // NOI18N
+        jMenu3.setText("Cambios");
+        jMenu3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489002930_go-back.png"))); // NOI18N
-        jMenuItem9.setText("Devoluciones");
-        jMenuItem9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        archivo.add(jMenuItem9);
+        irCambios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1495588542_exchange.png"))); // NOI18N
+        irCambios.setText("Realizar cambio");
+        irCambios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                irCambiosActionPerformed(evt);
+            }
+        });
+        jMenu3.add(irCambios);
+
+        irMostrarCambios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1495588385_Artboard_1.png"))); // NOI18N
+        irMostrarCambios.setText("Mostrar cambios");
+        jMenu3.add(irMostrarCambios);
+
+        archivo.add(jMenu3);
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489002930_go-back.png"))); // NOI18N
+        jMenu1.setText("Devoluciones");
+        jMenu1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        irDevoluciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489001366_1.png"))); // NOI18N
+        irDevoluciones.setText("Crear devolución");
+        irDevoluciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                irDevolucionesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(irDevoluciones);
+
+        irMostrarDevoluciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1495588385_Artboard_1.png"))); // NOI18N
+        irMostrarDevoluciones.setText("Mostrar devoluciones");
+        irMostrarDevoluciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                irMostrarDevolucionesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(irMostrarDevoluciones);
+
+        archivo.add(jMenu1);
         archivo.add(jSeparator5);
 
         estadoCuenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1489003165_documents-01.png"))); // NOI18N
@@ -414,6 +451,42 @@ public class App extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_irMostrarCompraActionPerformed
 
+    private void irDevolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irDevolucionesActionPerformed
+        Devoluciones dev = new Devoluciones();
+        
+        dpnEscritorio.add(dev);
+        dev.show();
+        try {
+            dev.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_irDevolucionesActionPerformed
+
+    private void irMostrarDevolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irMostrarDevolucionesActionPerformed
+        mostrarDevoluciones dev = new mostrarDevoluciones();
+        
+        dpnEscritorio.add(dev);
+        dev.show();
+        try {
+            dev.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_irMostrarDevolucionesActionPerformed
+
+    private void irCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irCambiosActionPerformed
+        Cambios cb = new Cambios();
+        
+        dpnEscritorio.add(cb);
+        cb.show();
+        try {
+            cb.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_irCambiosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -461,15 +534,19 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JDesktopPane dpnEscritorio;
     private javax.swing.JMenuItem empleadosBajas;
     private javax.swing.JMenuItem estadoCuenta;
+    private javax.swing.JMenuItem irCambios;
     private javax.swing.JMenuItem irCompras;
+    private javax.swing.JMenuItem irDevoluciones;
+    private javax.swing.JMenuItem irMostrarCambios;
     private javax.swing.JMenuItem irMostrarCompra;
+    private javax.swing.JMenuItem irMostrarDevoluciones;
     private javax.swing.JMenuItem irPromociones;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;

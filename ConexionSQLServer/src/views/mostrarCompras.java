@@ -114,6 +114,8 @@ public class mostrarCompras extends javax.swing.JInternalFrame {
         orden = new javax.swing.JComboBox<>();
         btnActualizar = new javax.swing.JButton();
 
+        setClosable(true);
+
         jLayeredPane3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(0, 102, 153), null));
 
         Total.setEditable(false);

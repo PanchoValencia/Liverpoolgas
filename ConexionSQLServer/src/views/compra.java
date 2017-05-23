@@ -227,6 +227,8 @@ public class compra extends javax.swing.JInternalFrame {
         comboProveedor = new javax.swing.JComboBox<>();
         btnReset = new javax.swing.JButton();
 
+        setClosable(true);
+
         jLabel1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setText("Folio");
@@ -736,12 +738,13 @@ public class compra extends javax.swing.JInternalFrame {
         }
         else
         {
-            
             inputCantidad.setText("");
             inputCantidad.setEnabled(false);
             btnCantidad.setEnabled(false);
             tableCompra.clearSelection();
-
+            
+            int row = tableCompra.getSelectedRow();
+            tableCompra.setValueAt(cantPedida, row, 7);
             //setear subtotal , iva  , total
             subtotal.setText( String.valueOf(getSubTotal()) );
             iva.setText(String.valueOf(getIva()));

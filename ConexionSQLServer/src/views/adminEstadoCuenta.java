@@ -512,23 +512,30 @@ public class adminEstadoCuenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_buscarCteActionPerformed
 
     private void buscarCteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarCteKeyReleased
-        showCte(buscarCte.getText());
-        
-        if( buscarCte.getText().isEmpty() )
+        if( Validations.validarQuotes(buscarCte.getText()) )
         {
-            DefaultTableModel tabCte = (DefaultTableModel) tablaCte.getModel();
-            tabCte.setRowCount(0);
-        }
         
-        DefaultTableModel tabCred = (DefaultTableModel) tablaCreditos.getModel();
-        tabCred.setRowCount(0);
-        DefaultTableModel tabComp = (DefaultTableModel) tablaComplemento.getModel();
-        tabComp.setRowCount(0);
-        fechaAbono.setText("");
-        abono.setText("");
-        abono.setEnabled(false);
-        btnAbonar.setEnabled(false);
-        btnHistorial.setEnabled(false);
+        }
+        else
+        {
+            showCte(buscarCte.getText());
+
+            if( buscarCte.getText().isEmpty() )
+            {
+                DefaultTableModel tabCte = (DefaultTableModel) tablaCte.getModel();
+                tabCte.setRowCount(0);
+            }
+
+            DefaultTableModel tabCred = (DefaultTableModel) tablaCreditos.getModel();
+            tabCred.setRowCount(0);
+            DefaultTableModel tabComp = (DefaultTableModel) tablaComplemento.getModel();
+            tabComp.setRowCount(0);
+            fechaAbono.setText("");
+            abono.setText("");
+            abono.setEnabled(false);
+            btnAbonar.setEnabled(false);
+            btnHistorial.setEnabled(false);
+        }
     }//GEN-LAST:event_buscarCteKeyReleased
 
     private void tablaCteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCteMouseClicked

@@ -772,9 +772,16 @@ public class nuevaVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tableProductosMouseClicked
 
     private void txtBuscarProdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarProdKeyReleased
-        showProd(txtBuscarProd.getText());
-        if( txtBuscarProd.getText().isEmpty() ){
-            cleanProd();
+        if( Validations.validarQuotes(txtBuscarProd.getText()) )
+        {
+        
+        }
+        else
+        {
+            showProd(txtBuscarProd.getText());
+            if( txtBuscarProd.getText().isEmpty() ){
+                cleanProd();
+            }
         }
     }//GEN-LAST:event_txtBuscarProdKeyReleased
 

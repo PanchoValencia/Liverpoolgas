@@ -257,7 +257,7 @@ CREATE TABLE devolucion
 	cod_cliente integer foreign key references cliente(cod_cliente) not null,
 	fecha_devolucion date,
 	folio_devolucion varchar(15),
-	monto_devolucion float(53)
+	monto_devolucion float(2)
 )
 GO
 
@@ -1095,6 +1095,14 @@ update producto set cantidad_producto=@cant where cod_producto=@cod
 end
 go
 
+/*:::::DEVOLUCIONES:::::*/
+go
+create proc newDevolucion( @codProd int , @codCte int , @fecha varchar(10) , @folio varchar(15) , @monto float(2) )
+as begin
+insert into devolucion( cod_producto , cod_cliente , fecha_devolucion , folio_devolucion , monto_devolucion ) values( @codProd , @codCte , convert(date , @fecha) , @folio , @monto )
+delete from venta where cod_producto=@codProd and folio_venta=@folio
+end
+go
 
 
 /*---------------------------------------------------------------------*/

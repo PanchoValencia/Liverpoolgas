@@ -1104,6 +1104,25 @@ delete from venta where cod_producto=@codProd and folio_venta=@folio
 end
 go
 
+/*:::::CAMBIOS:::::*/
+/*nuevo cambio*/
+go
+create proc newCambio( @codProd int , @codCte int , @folioCambio varchar(15) , @diferiencia float(2) , @nuevoProd varchar(50) , @fechaCambio varchar(10) )
+as begin
+insert into cambio( cod_producto , cod_cliente , folio_cambio , diferencia , nuevop_cambio , fecha_cambio ) values( @codProd , @codCte , @folioCambio , @diferiencia , @nuevoProd , convert( date , @fechaCambio ) )
+end
+go 
+
+/*actualiza venta con el cambio*/
+go
+create proc updateVenta( @codProdViejo int , @codProdNuevo int , @folio varchar(15) , @precio float(2) , @cantidad int )
+as begin
+update venta set cod_producto=@codProdNuevo , precio_venta=@precio , cantidad_venta=@cantidad where folio_venta=@folio and cod_producto=@codProdViejo
+end 
+go
+
+
+
 
 /*---------------------------------------------------------------------*/
 /*Some querys*/
@@ -1210,3 +1229,7 @@ go
 SELECT * FROM estado_cuenta WHERE folio_venta='17518257412' AND abono_ec is not NULL
 
 SELECT COUNT(folio_venta), folio_venta FROM estado_cuenta WHERE cod_cliente=1 GROUP BY folio_venta ORDER BY folio_venta
+
+select * from devolucion
+
+select * from cambio

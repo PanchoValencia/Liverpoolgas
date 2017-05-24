@@ -194,6 +194,11 @@ public class App extends javax.swing.JFrame {
 
         irMostrarCambios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/1495588385_Artboard_1.png"))); // NOI18N
         irMostrarCambios.setText("Mostrar cambios");
+        irMostrarCambios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                irMostrarCambiosActionPerformed(evt);
+            }
+        });
         jMenu3.add(irMostrarCambios);
 
         archivo.add(jMenu3);
@@ -486,6 +491,18 @@ public class App extends javax.swing.JFrame {
         catch (PropertyVetoException ex) {
         }
     }//GEN-LAST:event_irCambiosActionPerformed
+
+    private void irMostrarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irMostrarCambiosActionPerformed
+        mostrarCambios cb = new mostrarCambios();
+        
+        dpnEscritorio.add(cb);
+        cb.show();
+        try {
+            cb.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) {
+        }
+    }//GEN-LAST:event_irMostrarCambiosActionPerformed
 
     /**
      * @param args the command line arguments

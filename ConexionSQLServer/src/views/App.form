@@ -189,6 +189,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Mostrar cambios"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="irMostrarCambiosActionPerformed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>

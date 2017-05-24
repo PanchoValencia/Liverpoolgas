@@ -6,8 +6,12 @@
 package views;
 
 import conexionsqlserver.Validations;
+import conexionsqlserver.classDate;
+import conexionsqlserver.storedProcedures;
+import conexionsqlserver.temporalVariables;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -293,7 +297,9 @@ public class Cambios extends javax.swing.JInternalFrame {
             }
         }
         catch( SQLException e )
-        {}
+        {
+            JOptionPane.showMessageDialog(null, "error en mostrar folios");
+        }
     }
     public Cambios() {
         initComponents();
@@ -481,7 +487,7 @@ public class Cambios extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Código", "Nombre", "Marca", "Modelo", "Color", "Precio", "Descripción"
+                "CódigoProd", "Nombre", "Marca", "Modelo", "Color", "Precio", "Descripción"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -504,6 +510,11 @@ public class Cambios extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane6.setViewportView(tableProductos);
+        if (tableProductos.getColumnModel().getColumnCount() > 0) {
+            tableProductos.getColumnModel().getColumn(0).setMinWidth(0);
+            tableProductos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableProductos.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
 
         txtBuscarProd.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         txtBuscarProd.addActionListener(new java.awt.event.ActionListener() {
@@ -737,7 +748,164 @@ public class Cambios extends javax.swing.JInternalFrame {
                 }
                 else
                 {
-                
+                    int filaTP = tableProductos.getSelectedRow();
+                    int filaTF = tablaFolios.getSelectedRow();
+                    String fol = tablaFolios.getValueAt(filaTF, 0).toString();
+                    int codProd = Integer.parseInt(tableProductos.getValueAt(filaTP, 0).toString());
+                    int newCantidad = Integer.parseInt(nuevaCantidad);
+                    int cantExistente = 0;
+                    
+                    res = conexionsqlserver.ConnectionDB.Query("SELECT * FROM producto WHERE cod_producto="+codProd);
+                    try
+                    {
+                        while( res.next() )
+                        {
+                            cantExistente = res.getInt("cantidad_producto");
+                        }
+                    }
+                    catch( SQLException e )
+                    {
+                        JOptionPane.showMessageDialog(null, "error 1");
+                    }
+                    if( newCantidad > cantExistente )
+                    {
+                        JOptionPane.showMessageDialog(null, "Producto insuficiente, quedan "+cantExistente, "Advertencia" , JOptionPane.WARNING_MESSAGE);
+                        nuevaCantidad = JOptionPane.showInputDialog("Cantidad del nuevo producto");
+                    }
+                    else
+                    {
+                        int codCte = 0;
+                        int rowTP = tableProductos.getSelectedRow();
+                        int rowTD = tablaDevolucion.getSelectedRow();
+                        int codProdNuevo = Integer.parseInt(tableProductos.getValueAt(rowTP, 0).toString());
+                        float precio = Float.parseFloat(tableProductos.getValueAt(rowTD, 5).toString());
+                        int codProdViejo = Integer.parseInt(tablaDevolucion.getValueAt(rowTD, 7).toString());
+                        
+                        res = conexionsqlserver.ConnectionDB.Query(
+                                "SELECT * FROM venta"
+                              + " INNER JOIN cliente ON venta.cod_cliente=cliente.cod_cliente"
+                              + " WHERE venta.folio_venta='"+fol+"'"
+                        );
+                        try
+                        {
+                            while( res.next() )
+                            {
+                                codCte = res.getInt("cod_cliente");
+                            }
+                        }
+                        catch( SQLException e )
+                        {
+                            JOptionPane.showMessageDialog(null, "error 2");
+                        }
+                        
+                        classDate date = new classDate();
+                        date.setearFecha();
+                        String fechaCambio = (String)temporalVariables.getFechaActual();
+                        
+                        String marca = tableProductos.getValueAt(rowTP, 2).toString();
+                        String producto = tableProductos.getValueAt(rowTP, 1).toString();
+                        String modelo = tableProductos.getValueAt(rowTP, 3).toString();
+                        
+                        String nuevoProd = marca + " " + producto + " " + modelo;
+                        
+                        int cantRegresada = Integer.parseInt(tablaDevolucion.getValueAt(rowTD, 5).toString());
+                        int cantSumada = cantExistente + cantRegresada;
+                        
+                        float importeDev = Float.parseFloat(tablaDevolucion.getValueAt(rowTD, 6).toString());
+                        float importe = 0 , desc = 0 ;
+                        float price = 0;
+                        //hacer diferencia =>
+                        int codPromo = 0;
+                        String promo = null;
+                        Date fechaPromo = null;
+                        int rowProd = tableProductos.getSelectedRow();
+                        int codProducto = Integer.parseInt(tableProductos.getValueAt(rowProd, 0).toString());
+                        res = conexionsqlserver.ConnectionDB.Query(
+                                "SELECT * FROM promocion"
+                                        + " INNER JOIN producto ON promocion.cod_producto=producto.cod_producto"
+                                        + " WHERE promocion.cod_producto="+codProducto+" AND promocion.activo="+1);
+                        try
+                        {
+                            while( res.next() )
+                            {
+                                codPromo = res.getInt("cod_promocion");
+                                promo = res.getString("descripcion_promocion");
+                                fechaPromo = res.getDate("fechai_promocion");
+                                price = res.getFloat("precio_producto");
+                                if( fechaPromo.compareTo(date.getFechaSistema()) > 0 )
+                                {
+                                    promo = null;
+                                }
+                            }
+                        }
+                        catch(SQLException e)
+                        {
+                            JOptionPane.showMessageDialog(null, "error 3");
+                        }
+                        if( promo != null )
+                        {
+                            switch( promo )
+                            {
+                                case "10% de descuento":
+                                    desc = ((price * newCantidad ) / 100) * (10) ;
+                                    importe = (price * newCantidad) - desc ;
+                                    break;
+                                case "20% de descuento":
+                                    desc = ((price * newCantidad ) / 100) * (20) ;
+                                    importe = (price * newCantidad) - desc ;
+                                    break;
+                                case "30% de descuento":
+                                    desc = ((price * newCantidad ) / 100) * (30) ;
+                                    importe = (price * newCantidad) - desc ;
+                                    break;
+                                case "40% de descuento":
+                                    desc = ((price * newCantidad ) / 100) * (40) ;
+                                    importe = (price * newCantidad) - desc ;
+                                    break;
+                                case "50% de descuento":
+                                    desc = ((price * newCantidad ) / 100) * (50) ;
+                                    importe = (price * newCantidad) - desc ;
+                                    break;
+                                default:
+                                    importe = price * newCantidad;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            importe = price * newCantidad;
+                        }
+                        
+                        
+                        float dif = importe - importeDev;
+                        res = conexionsqlserver.ConnectionDB.Query("");
+                        
+                        try
+                        {
+                            date.setearFol();
+                            storedProcedures.newCambio(codProdNuevo, codCte, temporalVariables.getFol(), dif, nuevoProd, fechaCambio);
+                            storedProcedures.updateVenta(codProdViejo, codProdNuevo, fol, precio, newCantidad);
+                            storedProcedures.sumPxC(codProdViejo, cantSumada);
+                            
+                            JOptionPane.showMessageDialog(null, "Devolución creada correctamente", "Genial" , JOptionPane.INFORMATION_MESSAGE);
+                            
+                            //mostrarFolios();
+                            cleanProd();
+                            DefaultTableModel td = (DefaultTableModel) tablaDevolucion.getModel();
+                            td.setRowCount(0);
+                            cliente.setText("");
+                            fechaVenta.setText("");
+                            subtotal.setText("");
+                            iva.setText("");
+                            Total.setText("");
+                            btnCambio.setEnabled(false);
+                            txtBuscarProd.setText("");
+                        }
+                        catch( SQLException e )
+                        {
+                            JOptionPane.showMessageDialog(null, "error 4");
+                        }
+                    }
                 }
             }
         }

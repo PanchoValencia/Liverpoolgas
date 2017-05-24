@@ -743,5 +743,29 @@ public class storedProcedures {
         add.setFloat(5, monto);
         add.execute();
     }
+    
+    //:::::CAMBIOS:::::
+    public static void newCambio( int codProd, int codCte , String folio , float diferencia , String nuevoProd , String fechaCambio )throws SQLException{
+        CallableStatement add = ConnectionDB.GetConnection().prepareCall("{call newCambio(?,?,?,?,?,?)}");
+        
+        add.setInt(1, codProd);
+        add.setInt(2, codCte);
+        add.setString(3, folio);
+        add.setFloat(4, diferencia);
+        add.setString(5, nuevoProd);
+        add.setString(6, fechaCambio);
+        add.execute();
+    }
+    
+    public static void updateVenta( int codProdViejo, int codProdNuevo , String folio , float precio , int cantidad )throws SQLException{
+        CallableStatement upd = ConnectionDB.GetConnection().prepareCall("{call updateVenta(?,?,?,?,?)}");
+        
+        upd.setInt(1, codProdViejo);
+        upd.setInt(2, codProdNuevo);
+        upd.setString(3, folio);
+        upd.setFloat(4, precio);
+        upd.setInt(5, cantidad);
+        upd.execute();
+    }
 
 }

@@ -33,7 +33,7 @@ import javax.swing.table.TableColumn;
  */
 public class compra extends javax.swing.JInternalFrame {
     static ResultSet res;
-    public void showProv()
+public void showProv()
     {
         res = conexionsqlserver.ConnectionDB.Query("SELECT * FROM proveedor WHERE proveedor.activo="+1);
         
@@ -42,7 +42,7 @@ public class compra extends javax.swing.JInternalFrame {
             while( res.next() )
             {
                 String codigo   = res.getString("cod_proveedor")       ,
-                       nombre   = res.getString("nombre_proveedor")    ,
+                       nombre   = res.getString("nombre_proveedor")   ,
                        app      = res.getString("apellidop_proveedor") ,
                        apm      = res.getString("apellidom_proveedor") ,
                        empleado = codigo + " - " + nombre + " " + app + " " + apm ;
@@ -65,11 +65,11 @@ public class compra extends javax.swing.JInternalFrame {
         if( numFilas > 0 ){
             for( int i = 0 ; i < numFilas ; i ++ ){
                 
-                if( tableCompra.getValueAt(i, 8).toString().isEmpty() ){
+                if( tableCompra.getValueAt(i, 9).toString().isEmpty() ){
                     importe = 0;
                 }
                 else{
-                    importe = Float.parseFloat(tableCompra.getValueAt(i, 8).toString());
+                    importe = Float.parseFloat(tableCompra.getValueAt(i, 9).toString());
                 }
                 subtotal = subtotal + importe;
             }
@@ -98,7 +98,7 @@ public class compra extends javax.swing.JInternalFrame {
         
         if( numFilas > 0 ){
             for( int i = 0 ; i < numFilas ; i ++ ){
-                cantidad = tableCompra.getValueAt(i, 7).toString();
+                cantidad = tableCompra.getValueAt(i, 8).toString();
                 
                 if( cantidad.equals("")){
                     return true;
@@ -227,8 +227,6 @@ public class compra extends javax.swing.JInternalFrame {
         comboProveedor = new javax.swing.JComboBox<>();
         btnReset = new javax.swing.JButton();
 
-        setClosable(true);
-
         jLabel1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setText("Folio");
@@ -238,7 +236,7 @@ public class compra extends javax.swing.JInternalFrame {
         folio.setForeground(new java.awt.Color(102, 102, 102));
         folio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        jLayeredPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resúmen de venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Emoji", 0, 14), new java.awt.Color(0, 102, 204))); // NOI18N
+        jLayeredPane1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resúmen de compra", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI Emoji", 0, 14), new java.awt.Color(0, 102, 204))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(102, 102, 102));
@@ -270,7 +268,7 @@ public class compra extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "codigo", "Nombre", "Modelo", "Marca", "Color", "Descripción", "Precio", "Cantidad", "Importe"
+                "codigo", "Nombre", "Modelo", "Marca", "Color", "Descripción", "Precio", "Cantidad", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -349,30 +347,29 @@ public class compra extends javax.swing.JInternalFrame {
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inputCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnCantidad))
-                            .addComponent(btnPagarContado, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(total, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(iva)
-                                    .addComponent(subtotal, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)))))
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(iva, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(total))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnCantidad))
+                    .addComponent(btnPagarContado, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jLayeredPane1Layout.setVerticalGroup(
@@ -413,7 +410,7 @@ public class compra extends javax.swing.JInternalFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel3.setText("Empleado");
+        jLabel3.setText("Proveedor");
 
         jSeparator1.setForeground(new java.awt.Color(153, 153, 153));
 
@@ -508,6 +505,11 @@ public class compra extends javax.swing.JInternalFrame {
 
         comboProveedor.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         comboProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un empleado" }));
+        comboProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboProveedorActionPerformed(evt);
+            }
+        });
 
         btnReset.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         btnReset.setForeground(new java.awt.Color(40, 40, 40));
@@ -650,7 +652,6 @@ public class compra extends javax.swing.JInternalFrame {
                     String Fecha    = fecha.getText();
                     Float precio    = Float.parseFloat(tableCompra.getValueAt(i, 6).toString());
                     int cantidad    = Integer.parseInt(tableCompra.getValueAt(i, 7).toString());
-                    //int codPromo    = Integer.parseInt(tableVenta.getValueAt(i, 11).toString());
 
                     int cantExistente = 0;
                     res = conexionsqlserver.ConnectionDB.Query("select * from producto where cod_producto="+codProducto);
@@ -663,13 +664,12 @@ public class compra extends javax.swing.JInternalFrame {
                     }
                     catch(SQLException e ){}
 
-                    int cantRestante = cantExistente - cantidad;
+                    int cantRestante = cantExistente + cantidad;
 
                     try
                     {
                         storedProcedures.nuevaCompra(codProveedor, codProducto, Folio, Fecha, precio, cantidad);
-                        storedProcedures.restPxV(codProducto, cantRestante);
-                        storedProcedures.addPromo_venta(codProducto, Folio);
+                        storedProcedures.sumPxC(codProducto, cantRestante);
                     }
                     catch( SQLException e ){
                         JOptionPane.showMessageDialog(null, "No se realizó, :(" , "Error" , JOptionPane.ERROR_MESSAGE);
@@ -738,14 +738,12 @@ public class compra extends javax.swing.JInternalFrame {
         }
         else
         {
+            
             inputCantidad.setText("");
             inputCantidad.setEnabled(false);
             btnCantidad.setEnabled(false);
             tableCompra.clearSelection();
-            
-            int row = tableCompra.getSelectedRow();
-            tableCompra.setValueAt(cantPedida, row, 7);
-            //setear subtotal , iva  , total
+
             subtotal.setText( String.valueOf(getSubTotal()) );
             iva.setText(String.valueOf(getIva()));
             total.setText(String.valueOf(getTotal()));
@@ -813,30 +811,12 @@ public class compra extends javax.swing.JInternalFrame {
 
             JButton btn = new JButton("Quitar");
 
-            //colocar promoción si es que lo tiene
-            String promo = null;
-            Date fechaPromo = null;
-            int codPromo = 0;
+            //colocar promoción si es que lo tien
             //setear classDate
             classDate date = new classDate();
             date.setearFecha();
             int rowProd = tableProductos.getSelectedRow();
             int codProducto = Integer.parseInt(tableProductos.getValueAt(rowProd, 0).toString());
-            res = conexionsqlserver.ConnectionDB.Query("select * from promocion where cod_producto="+codProducto+" and activo="+1);
-            try
-            {
-                while( res.next() )
-                {
-                    codPromo = res.getInt("cod_promocion");
-                    promo = res.getString("descripcion_promocion");
-                    fechaPromo = res.getDate("fechai_promocion");
-                    if( fechaPromo.compareTo(date.getFechaSistema()) > 0 )
-                    {
-                        promo = null;
-                    }
-                }
-            }
-            catch(SQLException e){}
 
             Object fila[] = { String.valueOf(codProd) , prod , model , marca , color , desc , price , "" , "",btn};
 
@@ -876,6 +856,24 @@ public class compra extends javax.swing.JInternalFrame {
         btnPagarContado.setEnabled(false);
         btnReset.setEnabled(false);
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void comboProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboProveedorActionPerformed
+        // TODO add your handling code here:
+        if( comboProveedor.getSelectedIndex() > 0 )
+        {
+            classDate fec = new classDate();
+            fec.setearFol(); 
+
+            String item = comboProveedor.getSelectedItem().toString();
+            String array[] = item.split("");
+            int cod = Integer.parseInt( array[0] );
+
+            folio.setText(temporalVariables.getFol() + cod);
+        }
+        else{
+            folio.setText("");
+        }
+    }//GEN-LAST:event_comboProveedorActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

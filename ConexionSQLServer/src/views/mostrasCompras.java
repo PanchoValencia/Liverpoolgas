@@ -18,12 +18,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Derian Pinto
  */
-public class mostrarCompras extends javax.swing.JInternalFrame {
+public class mostrasCompras extends javax.swing.JInternalFrame {
     static ResultSet res;
     /**
      * Creates new form mostrasCompras
      */
-    public mostrarCompras() {
+    public mostrasCompras() {
         initComponents();
     }
     public void showVentasFolioASC(){
@@ -113,8 +113,6 @@ public class mostrarCompras extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         orden = new javax.swing.JComboBox<>();
         btnActualizar = new javax.swing.JButton();
-
-        setClosable(true);
 
         jLayeredPane3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(0, 102, 153), null));
 

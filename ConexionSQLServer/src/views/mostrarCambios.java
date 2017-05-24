@@ -110,7 +110,7 @@ public class mostrarCambios extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Fecha de cambio", "Clinte", "Producto Anterior", "Producto nuevo", "Folio de cambio", "Diferencia"
+                "Fecha de cambio", "Cliente", "Producto Anterior", "Producto nuevo", "Folio de cambio", "Diferencia"
             }
         ) {
             boolean[] canEdit = new boolean [] {

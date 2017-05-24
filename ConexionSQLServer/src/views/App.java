@@ -445,7 +445,7 @@ public class App extends javax.swing.JFrame {
     }//GEN-LAST:event_irComprasActionPerformed
 
     private void irMostrarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irMostrarCompraActionPerformed
-        mostrarCompras mc = new mostrarCompras();
+        mostrasCompras mc = new mostrasCompras();
         
         dpnEscritorio.add(mc);
         mc.show();

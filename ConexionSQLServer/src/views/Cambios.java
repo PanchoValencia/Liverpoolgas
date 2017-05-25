@@ -887,9 +887,9 @@ public class Cambios extends javax.swing.JInternalFrame {
                             storedProcedures.updateVenta(codProdViejo, codProdNuevo, fol, precio, newCantidad);
                             storedProcedures.sumPxC(codProdViejo, cantSumada);
                             
-                            JOptionPane.showMessageDialog(null, "Devolución creada correctamente", "Genial" , JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Cambio creado correctamente", "Genial" , JOptionPane.INFORMATION_MESSAGE);
                             
-                            //mostrarFolios();
+                            mostrarFolios();
                             cleanProd();
                             DefaultTableModel td = (DefaultTableModel) tablaDevolucion.getModel();
                             td.setRowCount(0);
@@ -898,7 +898,7 @@ public class Cambios extends javax.swing.JInternalFrame {
                             subtotal.setText("");
                             iva.setText("");
                             Total.setText("");
-                            btnCambio.setEnabled(false);
+                            //btnCambio.setEnabled(false);
                             txtBuscarProd.setText("");
                         }
                         catch( SQLException e )

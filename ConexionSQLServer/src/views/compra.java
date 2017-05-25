@@ -65,12 +65,13 @@ public void showProv()
         if( numFilas > 0 ){
             for( int i = 0 ; i < numFilas ; i ++ ){
                 
-                if( tableCompra.getValueAt(i, 9).toString().isEmpty() ){
+                if( tableCompra.getValueAt(i, 7).toString().isEmpty() ){
                     importe = 0;
                 }
                 else{
-                    importe = Float.parseFloat(tableCompra.getValueAt(i, 9).toString());
+                    importe = Float.parseFloat(tableCompra.getValueAt(i, 7).toString())*Float.parseFloat(tableCompra.getValueAt(i, 6).toString());
                 }
+                tableCompra.setValueAt(importe, i, 8);
                 subtotal = subtotal + importe;
             }
         }
@@ -227,6 +228,8 @@ public void showProv()
         comboProveedor = new javax.swing.JComboBox<>();
         btnReset = new javax.swing.JButton();
 
+        setClosable(true);
+
         jLabel1.setFont(new java.awt.Font("Segoe UI Emoji", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setText("Folio");
@@ -268,7 +271,7 @@ public void showProv()
 
             },
             new String [] {
-                "codigo", "Nombre", "Modelo", "Marca", "Color", "Descripción", "Precio", "Cantidad", ""
+                "codigo", "Nombre", "Modelo", "Marca", "Color", "Descripción", "Precio", "Cantidad", "Importe"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -347,29 +350,32 @@ public void showProv()
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inputCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(btnCantidad))
+                            .addComponent(btnPagarContado, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(total)
+                                    .addComponent(iva, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)))))
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(iva, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(total))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnCantidad))
-                    .addComponent(btnPagarContado, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jLayeredPane1Layout.setVerticalGroup(
@@ -504,7 +510,7 @@ public void showProv()
         );
 
         comboProveedor.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        comboProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un empleado" }));
+        comboProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona un proveedor" }));
         comboProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboProveedorActionPerformed(evt);
@@ -738,7 +744,7 @@ public void showProv()
         }
         else
         {
-            
+            tableCompra.setValueAt(inputCantidad.getText(), rowTV, 7);
             inputCantidad.setText("");
             inputCantidad.setEnabled(false);
             btnCantidad.setEnabled(false);
@@ -830,9 +836,16 @@ public void showProv()
     }//GEN-LAST:event_txtBuscarProdActionPerformed
 
     private void txtBuscarProdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarProdKeyReleased
-        showProd(txtBuscarProd.getText());
-        if( txtBuscarProd.getText().isEmpty() ){
-            cleanProd();
+        if( Validations.validarQuotes(txtBuscarProd.getText()) )
+        {
+        
+        }
+        else
+        {
+            showProd(txtBuscarProd.getText());
+            if( txtBuscarProd.getText().isEmpty() ){
+                cleanProd();
+            }
         }
     }//GEN-LAST:event_txtBuscarProdKeyReleased
 

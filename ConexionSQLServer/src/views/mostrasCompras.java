@@ -25,6 +25,7 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
      */
     public mostrasCompras() {
         initComponents();
+        this.showVentasFolioASC();
     }
     public void showVentasFolioASC(){
         DefaultTableModel com = (DefaultTableModel) tableCompras.getModel();
@@ -35,7 +36,7 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
             while(res.next()){
                 Vector v = new Vector();
                 v.add(res.getInt(1));
-                v.add(res.getString("folio_venta"));
+                v.add(res.getString("folio_compra"));
                 com.addRow(v);
                 tableCompras.setModel(com);
             }
@@ -48,7 +49,7 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
         float subt = 0;
         for( int i = 0 ; i < tablaReporte.getRowCount() ; i ++ )
         {
-            subt += Float.parseFloat(tablaReporte.getValueAt(i, 6).toString());
+            subt += (Float.parseFloat(tablaReporte.getValueAt(i, 3).toString()) * Float.parseFloat(tablaReporte.getValueAt(i, 4).toString()));
         }
         return subt;
     }
@@ -113,6 +114,8 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         orden = new javax.swing.JComboBox<>();
         btnActualizar = new javax.swing.JButton();
+
+        setClosable(true);
 
         jLayeredPane3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(0, 102, 153), null));
 
@@ -200,6 +203,11 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
         tablaReporte.setShowVerticalLines(false);
         tablaReporte.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tablaReporte);
+        if (tablaReporte.getColumnModel().getColumnCount() > 0) {
+            tablaReporte.getColumnModel().getColumn(5).setMinWidth(0);
+            tablaReporte.getColumnModel().getColumn(5).setPreferredWidth(0);
+            tablaReporte.getColumnModel().getColumn(5).setMaxWidth(0);
+        }
 
         iva.setEditable(false);
         iva.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
@@ -469,7 +477,7 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
         + " inner join modelo_producto on producto.cod_producto=modelo_producto.cod_producto"
         + " inner join modelo on modelo_producto.cod_modelo=modelo.cod_modelo"
         + " inner join proveedor on compra.cod_proveedor=proveedor.cod_proveedor"
-        + " where venta.folio_compra='"+folioCompra+"'";
+        + " where compra.folio_compra='"+folioCompra+"'";
 
         res = conexionsqlserver.ConnectionDB.Query(query);//ejecutar consulta
 
@@ -491,9 +499,7 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
                     MARCA ,
                     MODELO ,
                     PRECIO ,
-                    "" ,//promocion
                     CANTIDAD ,
-                    "", //importe
                     CODPROD
                 };
 
@@ -509,7 +515,7 @@ public class mostrasCompras extends javax.swing.JInternalFrame {
         }
 
 
-        res = conexionsqlserver.ConnectionDB.Query("select * from proveedor inner join proveedor on proveedor.cod_proveedor=compra.cod_proveedor and compra.folio_compra='"+folioCompra+"'");
+        res = conexionsqlserver.ConnectionDB.Query("select * from proveedor inner join compra on proveedor.cod_proveedor=compra.cod_proveedor and compra.folio_compra='"+folioCompra+"'");
         try
         {
             while( res.next() )
